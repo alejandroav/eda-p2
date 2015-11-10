@@ -493,11 +493,51 @@ public class ListaBilingue {
 	public void consultaAcepciones(char p) {
 		NodoLD iterador;
 		if (p == 'O') {
+			String ant = null;
+			boolean exito = false;
+			iterador = diccOrigen;
 			
+			while(iterador!=null) {				
+				if (ant == iterador.getOrigen())
+					System.out.print("," + iterador.getTrad());
+				
+				if (ant!=iterador.getOrigen() && iterador.getNextOrigen().equals(iterador.getOrigen())) {
+					if (exito)
+						System.out.println();
+					exito = true;
+					System.out.print(iterador.getOrigen()+ ":" +iterador.getTrad());
+				}
+					
+				ant = iterador.getOrigen();
+				iterador = iterador.getNextOrigen();
+			}
+			
+			if (!exito)
+				System.out.println("No existe");
 		}
 		
 		if (p == 'D') {
+			String ant = null;
+			boolean exito = false;
+			iterador = diccTrad;
+			
+			while(iterador!=null) {				
+				if (ant == iterador.getTrad())
+					System.out.print("," + iterador.getOrigen());
 				
+				if (ant!=iterador.getTrad() && iterador.getNextTrad().equals(iterador.getTrad())) {
+					if (exito)
+						System.out.println();
+					exito = true;
+					System.out.print(iterador.getTrad()+ ":" +iterador.getOrigen());
+				}
+					
+				ant = iterador.getTrad();
+				iterador = iterador.getNextTrad();
+			}
+			
+			if (!exito)
+				System.out.println("No existe");	
 		}
 	}
 }
