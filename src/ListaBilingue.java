@@ -493,6 +493,7 @@ public class ListaBilingue {
 	public void consultaAcepciones(char p) {
 		NodoLD iterador;
 		if (p == 'O') {
+			System.out.println("SALIDA");
 			String ant = null;
 			boolean exito = false;
 			iterador = diccOrigen;
@@ -517,6 +518,7 @@ public class ListaBilingue {
 		}
 		
 		if (p == 'D') {
+			System.out.println("SALIDA");
 			String ant = null;
 			boolean exito = false;
 			iterador = diccTrad;
