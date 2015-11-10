@@ -140,18 +140,30 @@ public class DiccMiLista implements Diccionario {
 			if (exito) return true;
 			
 			// no existe, insertar ordenadamente
-			iterador = dicc;
+			iterador = dicc; exito = false;
+			NodoL ant = null; NodoL nuevo = new NodoL(p);
 			
-			while (iterador!=null) {
+			// insertamos en lista
+			while (iterador!=null && !exito) {
 				if (p.getOrigen().compareToIgnoreCase(iterador.getPalabra2().getOrigen()) < 0) {
-					NodoL aux = iterador;
-					iterador.setPalabra2(p);
-					iterador.cambiaNext(aux);
-					return true;
-				}
+					if (ant==null) 
+						dicc = nuevo;
 					
+					else
+						ant.cambiaNext(nuevo);
+					
+					nuevo.cambiaNext(iterador);
+					exito = true;
+				}
+				ant = iterador;
 				iterador = iterador.getNext();
 			}
+			
+			// si llegamos aqui va al final
+			if (!exito)
+				ant.cambiaNext(nuevo);
+			
+			return true;
 		}
 		return false;
 	}
@@ -160,12 +172,19 @@ public class DiccMiLista implements Diccionario {
 	public boolean borra(String s) {
 		if (s!=null) {
 			NodoL iterador = dicc;
+			NodoL ant = null;
 			while(iterador!=null) {
-				if (iterador.getNext().getPalabra2().getOrigen().equalsIgnoreCase(s)) {
-					NodoL aux = iterador.getNext().getNext();
-					iterador.cambiaNext(aux);
+				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(s)) {
+					NodoL aux = iterador.getNext();
+					
+					if (ant==null)
+						dicc = aux;
+					else
+						ant.cambiaNext(aux);
+					
 					return true;
 				}
+				ant = iterador;
 				iterador = iterador.getNext();
 			}
 		}
