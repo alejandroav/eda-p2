@@ -93,20 +93,27 @@ public class DiccLisJava implements Diccionario {
 				if (dicc.get(i).getOrigen().equalsIgnoreCase(p.getOrigen())) {
 					for (int j = 0; j < nlenguas; j++)
 						if (p.getTraduccion(lenguas.get(j)) != "") {
-							dicc.get(i).setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j));
-							exito = true;
+							if (dicc.get(i).setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j)) >= 0)
+								exito = true;
 						}
 				}
 			}
 			
-			if (exito) return true;
+			if (exito)
+				return true;
 			
-			// no existe, insertar ordenadamente
-			for (int i = 0; i < dicc.size(); i++) {
-				if (p.getOrigen().compareToIgnoreCase(dicc.get(i).getOrigen()) < 0) {
-					dicc.add(i, p);
-					return true;
+			if (busca(p.getOrigen())<0) {			
+				// no existe, insertar ordenadamente
+				for (int i = 0; i < dicc.size(); i++) {
+					if (p.getOrigen().compareToIgnoreCase(dicc.get(i).getOrigen()) < 0) {
+						dicc.add(i, p);
+						return true;
+					}
 				}
+				
+				// si llego aqui es que va al final
+				dicc.add(p);
+				return true;
 			}
 		}
 		return false;

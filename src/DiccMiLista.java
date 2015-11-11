@@ -2,42 +2,42 @@
 import java.io.*;
 import java.util.*;
 public class DiccMiLista implements Diccionario {
-	
+
 	public class NodoL {
 		private Palabra2 pal;
 		private NodoL next;
-		
+
 		public NodoL() {
 			pal = null;
 			next = null;
 		}
-		
+
 		public NodoL(Palabra2 p) {
 			pal = p;
 			next = null;
 		}
-		
+
 		public void cambiaNext(NodoL n) {
 			next = n;
 		}
-		
+
 		public void setPalabra2(Palabra2 p) {
 			pal = p;
 		}
-		
+
 		public NodoL getNext() {
 			return next;
 		}
-		
+
 		public Palabra2 getPalabra2() {
 			return pal;
 		}
 	}
-	
+
 	private int nlenguas;
 	private Vector<Character> lenguas;
 	private NodoL dicc;
-	
+
 	public DiccMiLista() {
 		nlenguas = -1;
 		lenguas = new Vector<Character>();
@@ -56,34 +56,34 @@ public class DiccMiLista implements Diccionario {
 				lectura = new BufferedReader(fichero);
 				String linea = lectura.readLine();
 				nlenguas = Integer.parseInt(linea);
-	
+
 				// obtengo las partes
 				linea = lectura.readLine();
 				String partes[] = null;
 				partes = linea.split("[ ]");
-				
+
 				for (int i = 0; i < nlenguas; i++) {
 					lenguas.add(partes[i].charAt(0));
 				}
-				
+
 				Palabra2 nueva = null;
-				
+
 				linea = lectura.readLine();
-	
+
 				// recorro las lineas, creando las palabras y sus traducciones e insertando
 				while (linea != null) {
 					partes = linea.split("[ ]*\\*[ ]*");
-					
+
 					char[] l = new char[nlenguas];
 					for (int i = 0; i < nlenguas; i++) {
 						l[i] = lenguas.elementAt(i);
 					}
 					nueva = new Palabra2(partes[0],l);
-					
+
 					for (int i = 1; i < partes.length; i++) {
 						nueva.setTrad(partes[i],l[i-1]);
 					}
-					
+
 					inserta(nueva);
 					linea = lectura.readLine();
 				}
@@ -107,63 +107,65 @@ public class DiccMiLista implements Diccionario {
 		if (p!=null) {
 			// comprobar que las lenguas coinciden
 			char[] leng = p.getLenguas();
-			
+
 			if (leng.length!=lenguas.size())
 				return false;
-			
+
 			for (int i = 0; i < leng.length; i++)
 				if (leng[i]!=lenguas.elementAt(i))
 					return false;
-			
+
 			// si la lista esta vacia, insertar
 			if (dicc==null) {
-				dicc.setPalabra2(p);
+				dicc = new NodoL(p);
 				return true;
 			}
 
 			boolean exito = false;
-			
+
 			// comprobar si ya existe. si existe, anadir cada traduccion a la ya existente
 			NodoL iterador = dicc;
-			
+
 			while(iterador!=null) {
 				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(p.getOrigen())) {
 					for (int j = 0; j < nlenguas; j++)
 						if (p.getTraduccion(lenguas.get(j)) != "") {
-							dicc.getPalabra2().setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j));
-							exito = true;
+							if (dicc.getPalabra2().setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j)) >= 0)
+								exito = true;
 						}
 				}
 				iterador = iterador.getNext();
 			}
-			
+
 			if (exito) return true;
-			
-			// no existe, insertar ordenadamente
-			iterador = dicc; exito = false;
-			NodoL ant = null; NodoL nuevo = new NodoL(p);
-			
-			// insertamos en lista
-			while (iterador!=null && !exito) {
-				if (p.getOrigen().compareToIgnoreCase(iterador.getPalabra2().getOrigen()) < 0) {
-					if (ant==null) 
-						dicc = nuevo;
-					
-					else
-						ant.cambiaNext(nuevo);
-					
-					nuevo.cambiaNext(iterador);
-					exito = true;
+
+			if (busca(p.getOrigen())<0) {		
+				// no existe, insertar ordenadamente
+				iterador = dicc; exito = false;
+				NodoL ant = null; NodoL nuevo = new NodoL(p);
+	
+				// insertamos en lista
+				while (iterador!=null && !exito) {
+					if (p.getOrigen().compareToIgnoreCase(iterador.getPalabra2().getOrigen()) < 0) {
+						if (ant==null) 
+							dicc = nuevo;
+	
+						else
+							ant.cambiaNext(nuevo);
+	
+						nuevo.cambiaNext(iterador);
+						exito = true;
+					}
+					ant = iterador;
+					iterador = iterador.getNext();
 				}
-				ant = iterador;
-				iterador = iterador.getNext();
+	
+				// si llegamos aqui va al final
+				if (!exito)
+					ant.cambiaNext(nuevo);
+	
+				return true;
 			}
-			
-			// si llegamos aqui va al final
-			if (!exito)
-				ant.cambiaNext(nuevo);
-			
-			return true;
 		}
 		return false;
 	}
@@ -176,12 +178,12 @@ public class DiccMiLista implements Diccionario {
 			while(iterador!=null) {
 				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(s)) {
 					NodoL aux = iterador.getNext();
-					
+
 					if (ant==null)
 						dicc = aux;
 					else
 						ant.cambiaNext(aux);
-					
+
 					return true;
 				}
 				ant = iterador;
@@ -202,7 +204,7 @@ public class DiccMiLista implements Diccionario {
 				c++;
 				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(s))
 					return c;
-				
+
 				iterador = iterador.getNext();
 			}		   
 		}
@@ -216,7 +218,7 @@ public class DiccMiLista implements Diccionario {
 			while (iterador!=null) {
 				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(s))
 					return iterador.getPalabra2().getTraduccion(l);
-				
+
 				iterador = iterador.getNext();
 			}
 		}
@@ -238,7 +240,7 @@ public class DiccMiLista implements Diccionario {
 		for (int i = 0; i < j; i++) {
 			if (iterador == null)
 				return;
-			
+
 			iterador.getPalabra2().escribeInfo();
 			iterador = iterador.next;
 		}
@@ -255,7 +257,7 @@ public class DiccMiLista implements Diccionario {
 				System.out.println(iterador.getPalabra2().getOrigen() + ":" + iterador.getPalabra2().getTraduccion(l));
 			else
 				System.out.println(iterador.getPalabra2().getOrigen() + ":");
-			
+
 			iterador = iterador.next;
 		}
 	}

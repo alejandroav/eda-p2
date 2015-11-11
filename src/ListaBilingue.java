@@ -344,14 +344,17 @@ public class ListaBilingue {
 	public Vector<String> getO(int i) {
 		if (i > 0) {
 			NodoLD iterador = diccOrigen;
-			while (i > 1) {
+			while (i > 1 && iterador!=null) {
 				i--;
 				iterador = iterador.getNextOrigen();
 			}
-			Vector<String> res = new Vector<String>();
-			res.add(iterador.getOrigen());
-			res.add(iterador.getTrad());
-			return res;
+			
+			if (iterador!=null) {
+				Vector<String> res = new Vector<String>();
+				res.add(iterador.getOrigen());
+				res.add(iterador.getTrad());
+				return res;
+			}
 		}		
 		return null;
 	}
@@ -360,14 +363,17 @@ public class ListaBilingue {
 	public Vector<String> getD(int i) {
 		if (i > 0) {
 			NodoLD iterador = diccTrad;
-			while (i > 1) {
+			while (i > 1 && iterador!=null) {
 				i--;
 				iterador = iterador.getNextTrad();
 			}
-			Vector<String> res = new Vector<String>();
-			res.add(iterador.getOrigen());
-			res.add(iterador.getTrad());
-			return res;
+			
+			if (iterador!=null) {
+				Vector<String> res = new Vector<String>();
+				res.add(iterador.getOrigen());
+				res.add(iterador.getTrad());
+				return res;
+			}
 		}		
 		return null;
 	}
@@ -493,7 +499,6 @@ public class ListaBilingue {
 	public void consultaAcepciones(char p) {
 		NodoLD iterador;
 		if (p == 'O') {
-			System.out.println("SALIDA");
 			String ant = null;
 			boolean exito = false;
 			iterador = diccOrigen;
@@ -518,7 +523,6 @@ public class ListaBilingue {
 		}
 		
 		if (p == 'D') {
-			System.out.println("SALIDA");
 			String ant = null;
 			boolean exito = false;
 			iterador = diccTrad;

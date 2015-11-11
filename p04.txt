@@ -1,0 +1,27 @@
+address:adresse:dirección:endereço
+badly:mal:malo:gravemente
+family:famille:familia:família
+lay:poser::colocar
+normal::normal:normal
+photograph:photographie:fotografía:fotografar
+please:s'il vous plaît:por favor:
+toy:jouet::
+vowel:::
+wrong:faux:equivocado:errado
+Se inserta lay? -> true
+Se inserta normal? -> true
+Se inserta please? -> true
+Se inserta toy? -> false
+Se inserta wrong? -> false
+Se inserta wrong? -> false
+========== DICCIONARIO DESPUES DE INSERTAR ===============
+address:adresse:dirección:endereço
+badly:mal:malo:gravemente
+family:famille:familia:família
+lay:poser:dejar:colocar
+normal:normal:normal:normal
+photograph:photographie:fotografía:fotografar
+please:s'il vous plaît:por favor:por favor
+toy:jouet::
+vowel:::
+wrong:faux:equivocado:errado

@@ -23,11 +23,13 @@ public class Palabra2 {
 	
 	// inserta t en trad si existe la lengua l
 	public int setTrad(String t, char l) {
-		for (int i = 0; i < lenguas.length; i++)
-			if (lenguas[i]==l && !t.equalsIgnoreCase(trad.get(i))) {
-				trad.set(i, t);
-				return i;
-			}
+		if (t!=null) {
+			for (int i = 0; i < lenguas.length; i++)
+				if (lenguas[i]==l && !t.equalsIgnoreCase(trad.get(i))) {
+					trad.set(i, t);
+					return i;
+				}
+		}
 		return -1;
 	}
 	

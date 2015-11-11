@@ -1,0 +1,11 @@
+traduccion a F; acepcion coeur -> 0
+traduccion a E; acepcion alma -> 2
+traduccion a H; acepcion ziel -> 4
+traduccion a E; acepcion conciencia -> 2
+traduccion a I; acepcion anima -> 1
+Traduccion a F -> coeur
+Traduccion a I -> anima
+Traduccion a E -> conciencia
+No tiene traduccion a C
+Traduccion a H -> ziel
+soul:coeur:anima:conciencia::ziel

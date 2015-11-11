@@ -1,0 +1,10 @@
+traduccion a E; acepcion tranquilo -> 0
+traduccion a F; acepcion calme -> 1
+traduccion a P; acepcion quieto -> 2
+traduccion a I; acepcion ancora -> -1
+quiet:tranquilo:calme:quieto
+traduccion a P; acepcion tranquilo -> 2
+traduccion a I; acepcion tranquillo -> -1
+traduccion a F; acepcion calme -> -1
+traduccion a E; acepcion callado -> 0
+quiet:callado:calme:tranquilo

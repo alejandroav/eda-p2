@@ -5,7 +5,8 @@ public class ConsultaAcepciones {
 		if (args.length == 2) {
 			ListaBilingue lista = new ListaBilingue();
 			lista.leeDiccionarioRepe(args[0]);
-			char c = args[2].charAt(0);
+			char c = args[1].charAt(0);
+			System.out.println("SALIDA");
 			lista.consultaAcepciones(c);
 		}
 	}

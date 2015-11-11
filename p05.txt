@@ -1,0 +1,10 @@
+address:adresse:dirección:endereço
+badly:mal:malo:gravemente
+family:famille:familia:família
+lay:poser:poner:colocar
+normal:normal:normal:normal
+photograph:photographie:fotografía:fotografar
+please:s'il vous plaît:por favor:por favor
+toy:jouet:juguete:brinquedo
+vowel:voyelle:vocal:vogal
+wrong:faux:equivocado:errado
