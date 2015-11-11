@@ -68,19 +68,16 @@ public class ListaBilingue {
 				// flujos
 				fichero = new FileReader(f);
 				lectura = new BufferedReader(fichero);
+				
+				String[] partes;				
 				String linea = lectura.readLine();
-				
-				String origen = null;
-				String trad = null;
-				String[] partes;
-				
-				linea = lectura.readLine();
 	
 				// recorro las lineas, creando las palabras y sus traducciones e insertando
 				while (linea != null) {
 					partes = linea.split("[ ]*\\*[ ]*");
-					if (partes.length==2 && partes[0]!="" && partes[1]!="")
-						inserta(origen,trad);
+					
+					if (partes.length==2 && !partes[0].equals("") && !partes[1].equals(""))
+						inserta(partes[0],partes[1]);
 					
 					linea = lectura.readLine();
 				}
@@ -103,7 +100,7 @@ public class ListaBilingue {
 	// recorrer cada diccionario e insertar el nuevo nodo donde toque
 	// tiene un coste lineal, pues hay que recorrer ambas listas nodo a nodo (-)(n)
 	public boolean inserta(String o,String d) {
-		if (o!=null && d!=null) {			
+		if (o!=null && d!=null && !o.equalsIgnoreCase("") && !d.equalsIgnoreCase("")) {
 			// si la lista esta vacia, insertar
 			if (diccOrigen==null) {
 				NodoLD nueva = new NodoLD(o,d);
@@ -112,6 +109,7 @@ public class ListaBilingue {
 				return true;
 			}
 
+			// si se repite no inserto
 			if (buscaO(o)!=null || buscaD(d)!=null)
 				return false;
 			
@@ -144,9 +142,8 @@ public class ListaBilingue {
 			iterador = diccTrad; exito = false;
 			ant = null;
 			
-			// insertamos en origen
 			while (iterador!=null && !exito) {
-				if (o.compareToIgnoreCase(iterador.getTrad()) < 0) {
+				if (d.compareToIgnoreCase(iterador.getTrad()) < 0) {
 					if (ant==null) 
 						diccTrad = nuevo;
 					
@@ -172,10 +169,13 @@ public class ListaBilingue {
 	// borrar el origen s del diccionario
 	public boolean borraO(String s) {
 		if (s!=null) {
-			NodoLD iterador = diccOrigen;
-			NodoLD ant = null;
+			if (buscaO(s)==null)
+				return false;
 			
-			while(iterador!=null) {
+			NodoLD iterador = diccOrigen;
+			NodoLD ant = null; boolean exito = false;
+			
+			while(iterador!=null && !exito) {
 				if (iterador.getOrigen().equalsIgnoreCase(s)) {
 					NodoLD aux = iterador.getNextOrigen();
 					
@@ -185,7 +185,7 @@ public class ListaBilingue {
 					else
 						ant.cambiaNextOrigen(aux);
 					
-					return true;
+					exito = true;
 				}
 				ant = iterador;
 				iterador = iterador.getNextOrigen();
@@ -207,7 +207,7 @@ public class ListaBilingue {
 					return true;
 				}
 				ant = iterador;
-				iterador = iterador.getNextOrigen();
+				iterador = iterador.getNextTrad();
 			}
 		}
 		return false;
@@ -216,10 +216,13 @@ public class ListaBilingue {
 	// borrar la traduccion s del diccionario
 	public boolean borraD(String s) {
 		if (s!=null) {
-			NodoLD iterador = diccOrigen;
-			NodoLD ant = null;
+			if (buscaD(s)==null)
+				return false;
 			
-			while(iterador!=null) {
+			NodoLD iterador = diccOrigen;
+			NodoLD ant = null; boolean exito = false;
+			
+			while(iterador!=null && !exito) {
 				if (iterador.getTrad().equalsIgnoreCase(s)) {
 					NodoLD aux = iterador.getNextOrigen();
 					
@@ -229,7 +232,7 @@ public class ListaBilingue {
 					else
 						ant.cambiaNextOrigen(aux);
 					
-					return true;
+					exito = true;
 				}
 				ant = iterador;
 				iterador = iterador.getNextOrigen();
@@ -251,7 +254,7 @@ public class ListaBilingue {
 					return true;
 				}
 				ant = iterador;
-				iterador = iterador.getNextOrigen();
+				iterador = iterador.getNextTrad();
 			}
 		}
 		return false;
@@ -388,19 +391,16 @@ public class ListaBilingue {
 				// flujos
 				fichero = new FileReader(f);
 				lectura = new BufferedReader(fichero);
+				
+				String[] partes;				
 				String linea = lectura.readLine();
-				
-				String origen = null;
-				String trad = null;
-				String[] partes;
-				
-				linea = lectura.readLine();
 	
 				// recorro las lineas, creando las palabras y sus traducciones e insertando
 				while (linea != null) {
 					partes = linea.split("[ ]*\\*[ ]*");
-					if (partes.length==2 && partes[0]!="" && partes[1]!="")
-						insertaRepe(origen,trad);
+					
+					if (partes.length==2 && !partes[0].equals("") && !partes[1].equals(""))
+						insertaRepe(partes[0],partes[1]);
 					
 					linea = lectura.readLine();
 				}
@@ -422,8 +422,8 @@ public class ListaBilingue {
 	// insertar en los diccionarios permitiendo que se repitan
 	// recorrer cada diccionario e insertar el nuevo nodo donde toque
 	// tiene un coste lineal, pues hay que recorrer ambas listas nodo a nodo (-)(n)
-	public boolean insertaRepe(String o,String d) {
-		if (o!=null && d!=null) {			
+	public boolean insertaRepe(String o,String d) {		
+		if (o!=null && d!=null && !o.equalsIgnoreCase("") && !d.equalsIgnoreCase("")) {
 			// si la lista esta vacia, insertar
 			if (diccOrigen==null) {
 				NodoLD nueva = new NodoLD(o,d);
@@ -433,10 +433,7 @@ public class ListaBilingue {
 			}
 
 			NodoLD iterador = diccOrigen;
-			NodoLD nuevo = new NodoLD(o,d);
-			NodoLD ant = null;
-			
-			// comprobar si ya exite esa combinacion
+			// si se repite no inserto
 			while(iterador!=null) {
 				if (iterador.getOrigen().equalsIgnoreCase(o) && iterador.getTrad().equalsIgnoreCase(d))
 					return false;
@@ -445,8 +442,9 @@ public class ListaBilingue {
 			
 			// no existe, insertar ordenadamente
 			iterador = diccOrigen;
-			ant = null;
+			NodoLD ant = null;
 			boolean exito = false;
+			NodoLD nuevo = new NodoLD(o,d);
 			
 			// insertamos en origen
 			while (iterador!=null && !exito) {
@@ -472,7 +470,7 @@ public class ListaBilingue {
 			ant = null;
 			
 			while (iterador!=null && !exito) {
-				if (o.compareToIgnoreCase(iterador.getTrad()) <= 0) {
+				if (d.compareToIgnoreCase(iterador.getTrad()) <= 0) {
 					if (ant==null) 
 						diccTrad = nuevo;
 					
@@ -498,23 +496,30 @@ public class ListaBilingue {
 	// muestra las palabras con mas de una acepcion
 	public void consultaAcepciones(char p) {
 		NodoLD iterador;
+		
 		if (p == 'O') {
-			String ant = null;
-			boolean exito = false;
+			NodoLD ant = null;
+			boolean exito = false; boolean repe = false;
 			iterador = diccOrigen;
 			
-			while(iterador!=null) {				
-				if (ant == iterador.getOrigen())
-					System.out.print("," + iterador.getTrad());
+			while(iterador!=null) {
 				
-				if (ant!=iterador.getOrigen() && iterador.getNextOrigen().equals(iterador.getOrigen())) {
-					if (exito)
-						System.out.println();
-					exito = true;
-					System.out.print(iterador.getOrigen()+ ":" +iterador.getTrad());
+				if (ant!=null && !repe && ant.getOrigen().equalsIgnoreCase(iterador.getOrigen())) {
+					repe = true; exito = true;
+					System.out.print(ant.getOrigen() + ":" + ant.getTrad());
 				}
+				
+				else if (repe) {
+					if (!ant.getOrigen().equalsIgnoreCase(iterador.getOrigen())) {
+						repe = false;
+						System.out.println(","+ant.getTrad());
+					}
 					
-				ant = iterador.getOrigen();
+					else		
+						System.out.print(","+ant.getTrad());
+				}
+				
+				ant = iterador;
 				iterador = iterador.getNextOrigen();
 			}
 			
@@ -523,27 +528,33 @@ public class ListaBilingue {
 		}
 		
 		if (p == 'D') {
-			String ant = null;
-			boolean exito = false;
+			NodoLD ant = null;
+			boolean exito = false; boolean repe = false;
 			iterador = diccTrad;
 			
-			while(iterador!=null) {				
-				if (ant == iterador.getTrad())
-					System.out.print("," + iterador.getOrigen());
+			while(iterador!=null) {
 				
-				if (ant!=iterador.getTrad() && iterador.getNextTrad().equals(iterador.getTrad())) {
-					if (exito)
-						System.out.println();
-					exito = true;
-					System.out.print(iterador.getTrad()+ ":" +iterador.getOrigen());
+				if (ant!=null && !repe && ant.getTrad().equalsIgnoreCase(iterador.getTrad())) {
+					repe = true; exito = true;
+					System.out.print(ant.getTrad() + ":" + ant.getOrigen());
 				}
+				
+				else if (repe) {
+					if (!ant.getTrad().equalsIgnoreCase(iterador.getTrad())) {
+						repe = false;
+						System.out.println(","+ant.getOrigen());
+					}
 					
-				ant = iterador.getTrad();
+					else		
+						System.out.print(","+ant.getOrigen());
+				}
+				
+				ant = iterador;
 				iterador = iterador.getNextTrad();
 			}
 			
 			if (!exito)
-				System.out.println("No existe");	
+				System.out.println("No existe");
 		}
 	}
 }

@@ -73,18 +73,21 @@ public class DiccMiLista implements Diccionario {
 				// recorro las lineas, creando las palabras y sus traducciones e insertando
 				while (linea != null) {
 					partes = linea.split("[ ]*\\*[ ]*");
-
-					char[] l = new char[nlenguas];
-					for (int i = 0; i < nlenguas; i++) {
-						l[i] = lenguas.elementAt(i);
+					
+					if (!partes[0].equalsIgnoreCase("")) {
+						char[] l = new char[nlenguas];
+						for (int i = 0; i < nlenguas; i++) {
+							l[i] = lenguas.elementAt(i);
+						}
+						nueva = new Palabra2(partes[0],l);
+	
+						for (int i = 1; i < partes.length; i++) {
+							nueva.setTrad(partes[i],l[i-1]);
+						}
+						
+						inserta(nueva);
 					}
-					nueva = new Palabra2(partes[0],l);
-
-					for (int i = 1; i < partes.length; i++) {
-						nueva.setTrad(partes[i],l[i-1]);
-					}
-
-					inserta(nueva);
+						
 					linea = lectura.readLine();
 				}
 			} catch (Exception e) {
@@ -104,7 +107,7 @@ public class DiccMiLista implements Diccionario {
 
 	// insertar la palabra p en el diccionario
 	public boolean inserta(Palabra2 p) {
-		if (p!=null) {
+		if (p!=null && !p.getOrigen().equalsIgnoreCase("")) {
 			// comprobar que las lenguas coinciden
 			char[] leng = p.getLenguas();
 
@@ -120,24 +123,24 @@ public class DiccMiLista implements Diccionario {
 				dicc = new NodoL(p);
 				return true;
 			}
-
-			boolean exito = false;
-
-			// comprobar si ya existe. si existe, anadir cada traduccion a la ya existente
+			
 			NodoL iterador = dicc;
-
-			while(iterador!=null) {
-				if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(p.getOrigen())) {
-					for (int j = 0; j < nlenguas; j++)
-						if (p.getTraduccion(lenguas.get(j)) != "") {
-							if (dicc.getPalabra2().setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j)) >= 0)
-								exito = true;
-						}
+			boolean exito = false;
+			
+			if (busca(p.getOrigen()) >= 0) {
+				// comprobar si ya existe. si existe, anadir cada traduccion a la ya existente
+	
+				while(iterador!=null) {
+					if (iterador.getPalabra2().getOrigen().equalsIgnoreCase(p.getOrigen())) {
+						for (int j = 0; j < nlenguas; j++)
+								if (dicc.getPalabra2().setTrad(p.getTraduccion(lenguas.get(j)), lenguas.get(j)) >= 0)
+									exito = true;
+					}
+					iterador = iterador.getNext();
 				}
-				iterador = iterador.getNext();
+	
+				if (exito) return true;
 			}
-
-			if (exito) return true;
 
 			if (busca(p.getOrigen())<0) {		
 				// no existe, insertar ordenadamente
